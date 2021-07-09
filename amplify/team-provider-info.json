@@ -12,14 +12,10 @@
       "AmplifyAppId": "d1adl1n2p9x4u9"
     },
     "categories": {
-      "hosting": {
-        "amplifyhosting": {
-          "appId": "d1adl1n2p9x4u9",
-          "type": "cicd"
-        }
-      },
+      "hosting": {},
       "auth": {
-        "workshopdemo05408bb8": {}
+        "workshopdemo05408bb8": {},
+        "workshopdemo": {}
       }
     }
   }

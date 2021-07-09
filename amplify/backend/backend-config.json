@@ -1,13 +1,14 @@
 {
-  "hosting": {
-    "amplifyhosting": {
-      "service": "amplifyhosting",
-      "type": "cicd",
-      "lastPushTimeStamp": "2021-06-11T22:55:21.692Z"
+  "auth": {
+    "workshopdemo": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
     }
   },
   "api": {
-    "workshopdemoapi": {
+    "workshopdemo": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -15,21 +16,23 @@
           "defaultAuthentication": {
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
-              "apiKeyExpirationDays": 365,
-              "description": "demo"
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            },
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authworkshopdemo"
+              }
+            }
+          ]
         }
       }
-    }
-  },
-  "auth": {
-    "workshopdemo05408bb8": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false
     }
   }
 }

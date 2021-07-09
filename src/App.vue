@@ -2,21 +2,22 @@
   <amplify-authenticator>
     <div id="app">
       <h1>Todo App</h1>
-      <input type="text" v-model="name" placeholder="Todo name">
-      <input type="text" v-model="description" placeholder="Todo description">
+      <input type="text" v-model="name" placeholder="Todo name" />
+      <input type="text" v-model="description" placeholder="Todo description" />
       <button v-on:click="createTodo">Create Todo</button>
       <div v-for="item in todos" :key="item.id">
         <h3>{{ item.name }}</h3>
         <p>{{ item.description }}</p>
+        <small>{{ item.authorEmail }}</small>
       </div>
     </div>
-    
+
     <amplify-sign-out></amplify-sign-out>
   </amplify-authenticator>
 </template>
 
 <script>
-import { API } from 'aws-amplify';
+import { API, Auth } from 'aws-amplify';
 import { createTodo } from './graphql/mutations';
 import { listTodos } from './graphql/queries';
 import { onCreateTodo } from './graphql/subscriptions';
@@ -38,14 +39,21 @@ export default {
     async createTodo() {
       const { name, description } = this;
       if (!name || !description) return;
-      const todo = { name, description };
-      this.todos = [...this.todos, todo];
-      await API.graphql({
-        query: createTodo,
-        variables: {input: todo},
-      });
-      this.name = '';
-      this.description = '';
+
+      try {
+        const { attributes: { email }} = await Auth.currentAuthenticatedUser()
+
+        const todo = { name, description, authorEmail: email };
+        this.todos = [...this.todos, todo];
+        await API.graphql({
+          query: createTodo,
+          variables: {input: todo},
+        });
+        this.name = '';
+        this.description = '';
+      } catch {
+        //
+      }
     },
     async getTodos() {
       const todos = await API.graphql({
@@ -62,18 +70,20 @@ export default {
             this.todos = [...this.todos, todo];
           }
         });
-    }
+    },
   }
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

@@ -5,12 +5,9 @@
       <input type="text" v-model="name" placeholder="Todo name" />
       <input type="text" v-model="description" placeholder="Todo description" />
       <button v-on:click="createTodo">Create Todo</button>
-      <div v-for="item in todos" :key="item.id">
-        <h3>{{ item.name }}</h3>
-        <p>{{ item.description }}</p>
-        <small>{{ item.authorEmail }}</small>
-      </div>
     </div>
+
+    <Todos :todos="todos" />
 
     <amplify-sign-out></amplify-sign-out>
   </amplify-authenticator>
@@ -21,9 +18,13 @@ import { API, Auth } from 'aws-amplify';
 import { createTodo } from './graphql/mutations';
 import { listTodos } from './graphql/queries';
 import { onCreateTodo } from './graphql/subscriptions';
+import Todos from './components/Todos.vue'
 
 export default {
   name: 'App',
+  components: {
+    Todos
+  },
   async created() {
     this.getTodos();
     this.subscribe();
